@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch array of img in JavaScript</title>
+</head>
+
+<body>
+    <h1>Fetch array of img in JavaScript</h1>
+    <script>
+        const fileNames = [
+            'images/beijing.jpg',
+            'images/chongqing.jpg',
+            'images/shanghai.jpg',
+            'images/shenzhen.jpg'
+        ];
+
+        fetArrayOfImg()
+            .then(() => {
+                console.log('Successfully!');
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        async function fetArrayOfImg() {
+            for (let fileName of fileNames) {
+                let response = await fetch(fileName);
+                let blob = await response.blob();
+                let img = document.createElement('img');
+                img.src = URL.createObjectURL(blob);
+                img.width = '300';
+                document.body.append(img);
+            }
+        }
+    </script>
+</body>
+
+</html>
