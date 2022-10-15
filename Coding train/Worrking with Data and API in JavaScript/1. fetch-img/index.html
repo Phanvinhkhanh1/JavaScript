@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Image in JavaScript</title>
+</head>
+
+<body>
+    <img id="shanghai" src="" alt="" width="500">
+    <script>
+
+        fetImg()
+            .then(() => {
+                console.log("Successfully!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        async function fetImg() {
+            let response = await fetch('shanghai.jpg');
+            let blob = await response.blob();
+            document.getElementById("shanghai").src = URL.createObjectURL(blob);
+        }
+
+        // fetch('shanghai.jpg')
+        //     .then(response => {
+        //         // console.log(response.blob());
+        //         return response.blob();
+        //     })
+        //     .then(response => {
+        //         // console.log(response);
+        //         document.getElementById("shanghai").src = URL.createObjectURL(response);
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     })
+    </script>
+</body>
+
+</html>
