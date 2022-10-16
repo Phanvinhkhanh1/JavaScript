@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fetch CSV in JavaScript</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+
+<body>
+    <canvas id="chart" width="900" height="500"></canvas>
+    <script>
+
+        chartIt()
+            .then(() => {
+                console.log("Successfully!");
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+        async function chartIt() {
+            let data = await fetchCSV();
+            const ctx = document.getElementById('chart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.xlabels,
+                    datasets: [{
+                        label: "Global and Hemispheric Monthly Means and Zonal Annual Means",
+                        data: data.ydata,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: function (value, index, ticks) {
+                                    return value + '°';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        async function fetchCSV() {
+            let xlabels = [];
+            let ydata = [];
+
+            let response = await fetch('dataset/ZonAnn.Ts+dSST.csv');
+            let data = await response.text();
+            let table = data.split('\n').splice(1);
+
+            table.forEach(row => {
+                let col = row.split(',');
+                let year = col[0];
+                let glob = col[1];
+                xlabels.push(year);
+                ydata.push(parseFloat(glob) + 14);
+            })
+
+            return { xlabels, ydata };
+        }
+    </script>
+</body>
+
+</html>
